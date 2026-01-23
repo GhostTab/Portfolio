@@ -3,13 +3,24 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --clr-white: #fff;
+  --clr-black: #000;
+  --clr-light: rgb(240, 240, 240);
+  --clr-light-border: rgb(216, 216, 216);
+  --clr-dark: rgb(35, 35, 35);
+  --clr-dark-border: rgb(45, 45, 45);
+  --bg-gradient-blue: linear-gradient(rgb(120, 140, 176) 0%, rgb(174, 185, 212) 100%);
+  --bg-gradient-yellow: linear-gradient(rgb(222, 208, 197) 0%, rgb(235, 230, 222) 100%);
+  --bg-gradient-red: linear-gradient(rgb(223, 156, 165) 0%, rgb(231, 195, 200) 100%);
+  --bg-gradient-green: linear-gradient(rgb(184, 192, 183) 0%, rgb(204, 214, 209) 100%);
+  --inline-code-background-color: #e3e3e3;
+  --code-background-color: #282c34;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-poppins);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +33,61 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins), system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
 }
+
+@keyframes tech-slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.tech-slide-track {
+  animation: tech-slide 20s linear infinite;
+  display: flex;
+  will-change: transform;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.project-card {
+  position: relative;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+
