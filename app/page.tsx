@@ -130,6 +130,7 @@ export default function Home() {
             <div className="hidden md:flex items-center gap-4 lg:gap-6">
               {[
                 { label: "About", href: "#about" },
+                { label: "Journey", href: "#journey" }, 
                 { label: "Tech", href: "#tech" },
                 { label: "Projects", href: "#projects" },
                 { label: "Contact", href: "#contact" },
@@ -198,6 +199,54 @@ export default function Home() {
               </div>
             </div>
           </section>
+          {/* Developer Journey */}
+<section id="journey" className="mb-16 space-y-10 py-16">
+  <p className="text-base sm:text-lg font-semibold uppercase tracking-[0.25em] text-white/60">
+    Developer Journey
+  </p>
+
+  <div className="relative max-w-4xl mx-auto">
+    {/* Vertical Line */}
+    <div className="absolute left-4 top-0 h-full w-[2px] bg-white/10"></div>
+
+    {/* Timeline Items */}
+    {[
+      {
+        year: "2022 – 2023",
+        title: "System Development Foundations",
+        desc: "Built academic systems for school activities, focusing on logic, database structure, and problem-solving rather than UI-heavy applications.",
+      },
+      {
+        year: "2024",
+        title: "Web Development Focus",
+        desc: "Started building modern websites using Laravel and React, improving UI/UX, responsiveness, and real-world usability.",
+      },
+      {
+        year: "2025",
+        title: "Mobile & Intelligent Apps",
+        desc: "Developed mobile applications with machine learning and sentiment analysis, combining software engineering with data-driven features.",
+      },
+      {
+        year: "Now",
+        title: "Growing as a Software Engineer",
+        desc: "Sharpening skills in performance, clean architecture, and modern frontend experiences while building production-ready projects.",
+      },
+    ].map((item, index) => (
+      <div key={index} className="relative flex gap-6 pl-12 pb-10">
+        {/* Dot */}
+        <div className="absolute left-3 top-2 h-3 w-3 rounded-full bg-white"></div>
+
+        <div className="space-y-2">
+          <p className="text-sm text-white/50 font-medium">{item.year}</p>
+          <h4 className="text-xl font-semibold text-white">{item.title}</h4>
+          <p className="text-white/70 leading-relaxed max-w-2xl">
+            {item.desc}
+          </p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
 
           {/* Tech Stack */}
           <section id="tech" className="mb-16 space-y-6 py-10">
