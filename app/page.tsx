@@ -6,7 +6,13 @@ export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentRole, setCurrentRole] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [logoEasterEgg, setLogoEasterEgg] = useState(false);
   const menuContainerRef = useRef<HTMLDivElement>(null);
+
+  const triggerLogoEasterEgg = () => {
+    setLogoEasterEgg(true);
+    setTimeout(() => setLogoEasterEgg(false), 800);
+  };
 
   const roles = [
     "Fullstack Web Developer",
@@ -48,6 +54,168 @@ export default function Home() {
     }
   };
 
+  function useScrollReveal(
+    rootRef: React.RefObject<HTMLElement | null>,
+    isActive: boolean
+  ) {
+    const ref = useRef<HTMLElement | null>(null);
+  
+    useEffect(() => {
+      if (!isActive) return;
+      
+      if (!isMenuOpen) {
+        // Reset when menu closes
+        if (ref.current) {
+          ref.current.classList.remove("menu-reveal-active");
+        }
+        return;
+      }
+  
+      const element = ref.current;
+      const root = rootRef.current;
+      if (!element || !root) return;
+  
+      // Only work with menu-reveal elements
+      if (!element.classList.contains("menu-reveal")) return;
+  
+      let observer: IntersectionObserver | null = null;
+      let timeoutId: NodeJS.Timeout;
+      let rafId: number;
+  
+      // Reset state first
+      element.classList.remove("menu-reveal-active");
+  
+      // Use double RAF to ensure DOM is fully updated
+      rafId = requestAnimationFrame(() => {
+        rafId = requestAnimationFrame(() => {
+          // Check if element is initially visible
+          const rect = element.getBoundingClientRect();
+          const rootRect = root.getBoundingClientRect();
+          
+          const isInitiallyVisible = (
+            rect.top < rootRect.bottom &&
+            rect.bottom > rootRect.top &&
+            rect.left < rootRect.right &&
+            rect.right > rootRect.left &&
+            rect.height > 0 &&
+            rect.width > 0
+          );
+
+          if (isInitiallyVisible) {
+            // Immediately reveal if visible (delay handled by CSS)
+            element.classList.add("menu-reveal-active");
+          }
+
+          // Set up observer for scroll-based reveals (for elements not initially visible)
+          observer = new IntersectionObserver(
+            ([entry]) => {
+              if (entry.isIntersecting) {
+                element.classList.add("menu-reveal-active");
+                if (observer) observer.unobserve(element);
+              }
+            },
+            {
+              root,
+              threshold: 0.1,
+              rootMargin: "0px 0px -10% 0px",
+            }
+          );
+    
+          observer.observe(element);
+        });
+      });
+  
+      return () => {
+        cancelAnimationFrame(rafId);
+        if (observer) observer.disconnect();
+      };
+    }, [rootRef, isActive, isMenuOpen]);
+  
+    return ref;
+  }
+  
+  const aboutRef = useScrollReveal(menuContainerRef, true);
+  const journeyRef = useScrollReveal(menuContainerRef, true);
+  const techRef = useScrollReveal(menuContainerRef, true);
+  const projectsRef = useScrollReveal(menuContainerRef, true);
+  const contactRef = useScrollReveal(menuContainerRef, true);
+  
+  
+  const journeyRefs = useRef<HTMLDivElement[]>([]); // array of refs
+
+// Scroll reveal for timeline items
+useEffect(() => {
+  if (!isMenuOpen) {
+    // Reset timeline items when menu closes
+    journeyRefs.current.forEach((el) => {
+      if (el) el.classList.remove("timeline-reveal-active");
+    });
+    return;
+  }
+
+  const root = menuContainerRef.current;
+  if (!root) return;
+
+  const observers: IntersectionObserver[] = [];
+  let rafId: number;
+
+  // Use double RAF to ensure DOM is fully updated
+  rafId = requestAnimationFrame(() => {
+    rafId = requestAnimationFrame(() => {
+      journeyRefs.current.forEach((el, index) => {
+        if (!el) return;
+
+        // Reset state
+        el.classList.remove("timeline-reveal-active");
+
+        // Check if initially visible
+        const rect = el.getBoundingClientRect();
+        const rootRect = root.getBoundingClientRect();
+
+        const isInitiallyVisible = (
+          rect.top < rootRect.bottom &&
+          rect.bottom > rootRect.top &&
+          rect.left < rootRect.right &&
+          rect.right > rootRect.left &&
+          rect.height > 0 &&
+          rect.width > 0
+        );
+
+        if (isInitiallyVisible) {
+          // Reveal immediately (delay handled by CSS class)
+          el.classList.add("timeline-reveal-active");
+        }
+
+        // Set up observer for scroll-based reveals
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              el.classList.add("timeline-reveal-active");
+              observer.unobserve(el);
+            }
+          },
+          { 
+            root,
+            threshold: 0.1, 
+            rootMargin: "0px 0px -10% 0px" 
+          }
+        );
+
+        observer.observe(el);
+        observers.push(observer);
+      });
+    });
+  });
+
+  return () => {
+    cancelAnimationFrame(rafId);
+    observers.forEach(observer => observer.disconnect());
+  };
+}, [isMenuOpen]);
+
+  
+  
+
   return (
     <div className="min-h-screen bg-[#0b0c10] text-white">
       {/* Loading Screen */}
@@ -58,13 +226,13 @@ export default function Home() {
         style={{ background: "linear-gradient(180deg, #0b0c10 0%, #0f1118 100%)" }}
       >
         <div className="flex flex-col items-center gap-8">
-          <div className="relative">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm shadow-lg animate-pulse">
-              <h2 className="text-4xl font-bold text-white">
+          <div className="relative logo-loading group cursor-default">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm shadow-lg animate-pulse group-hover:animate-none group-hover:scale-110 group-hover:bg-white/20 transition-transform duration-300">
+              <h2 className="text-4xl font-bold text-white group-hover:scale-110 transition-transform duration-300">
                 L
               </h2>
             </div>
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div className="h-20 w-20 rounded-full border-2 border-white/20 border-t-white/60 animate-spin"></div>
             </div>
           </div>
@@ -79,11 +247,15 @@ export default function Home() {
       {/* Top Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-transparent">
         <div className="absolute left-4 top-4 sm:left-6 sm:top-6">
-          <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm shadow-lg">
-            <h2 className="text-lg sm:text-xl font-bold whitespace-nowrap text-black">
+          <button
+            onClick={triggerLogoEasterEgg}
+            aria-label="Logo"
+            className={`logo-nav group flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-300 hover:shadow-xl ${logoEasterEgg ? "logo-easter-egg" : ""}`}
+          >
+            <h2 className="text-lg sm:text-xl font-bold whitespace-nowrap text-black transition-transform duration-300 group-hover:scale-110">
               L
             </h2>
-          </div>
+          </button>
         </div>
         <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
           <button
@@ -126,7 +298,13 @@ export default function Home() {
               isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
             }`}
           >
-            <div className="text-sm sm:text-base md:text-lg font-semibold text-white/80 truncate">Loren Lloyd Pingal</div>
+            <button
+              onClick={triggerLogoEasterEgg}
+              aria-label="Logo"
+              className={`logo-menu group text-sm sm:text-base md:text-lg font-semibold text-white/80 truncate transition-transform duration-300 hover:text-white hover:scale-105 ${logoEasterEgg ? "logo-easter-egg" : ""}`}
+            >
+              Loren Lloyd Pingal
+            </button>
             <div className="hidden md:flex items-center gap-4 lg:gap-6">
               {[
                 { label: "About", href: "#about" },
@@ -160,7 +338,9 @@ export default function Home() {
         >
 
           {/* About Section */}
-          <section id="about" className="mb-16 space-y-8 py-16 min-h-[60vh]">
+          <section 
+          ref={aboutRef}
+          id="about" className="menu-reveal mb-16 space-y-8 py-16 min-h-[60vh] delay-[100ms]">
             <p className="text-base sm:text-lg font-semibold uppercase tracking-[0.25em] text-white/60">
               About
             </p>
@@ -176,6 +356,9 @@ export default function Home() {
                 <h3 className="text-4xl sm:text-5xl font-bold text-white">
                   Hi, I'm Loren Lloyd Pingal
                 </h3>
+                <p className="text-base sm:text-lg font-medium text-white/50 uppercase tracking-wider">
+                  Based in Tacloban City, Philippines
+                </p>
                 <p className="text-lg sm:text-xl leading-relaxed text-white/75">
                   I am a web developer with over two years of experience building modern web
                   applications. I primarily work with Laravel and React, focusing on creating clean,
@@ -199,57 +382,69 @@ export default function Home() {
               </div>
             </div>
           </section>
+
           {/* Developer Journey */}
-<section id="journey" className="mb-16 space-y-10 py-16">
-  <p className="text-base sm:text-lg font-semibold uppercase tracking-[0.25em] text-white/60">
-    Developer Journey
-  </p>
+          <section ref={journeyRef} id="journey" className="mb-16 space-y-10 py-16 delay-[200ms]">
+            <p className="text-base sm:text-lg font-semibold uppercase tracking-[0.25em] text-white/60">
+              My Journey
+            </p>
 
-  <div className="relative max-w-4xl mx-auto">
-    {/* Vertical Line */}
-    <div className="absolute left-4 top-0 h-full w-[2px] bg-white/10"></div>
+            <div className="relative max-w-4xl mx-auto">
+              {/* Vertical Line */}
+              <div className="absolute left-4 top-0 h-full w-[2px] bg-white/10"></div>
 
-    {/* Timeline Items */}
-    {[
-      {
-        year: "2022 – 2023",
-        title: "System Development Foundations",
-        desc: "Built academic systems for school activities, focusing on logic, database structure, and problem-solving rather than UI-heavy applications.",
-      },
-      {
-        year: "2024",
-        title: "Web Development Focus",
-        desc: "Started building modern websites using Laravel and React, improving UI/UX, responsiveness, and real-world usability.",
-      },
-      {
-        year: "2025",
-        title: "Mobile & Intelligent Apps",
-        desc: "Developed mobile applications with machine learning and sentiment analysis, combining software engineering with data-driven features.",
-      },
-      {
-        year: "Now",
-        title: "Growing as a Software Engineer",
-        desc: "Sharpening skills in performance, clean architecture, and modern frontend experiences while building production-ready projects.",
-      },
-    ].map((item, index) => (
-      <div key={index} className="relative flex gap-6 pl-12 pb-10">
-        {/* Dot */}
-        <div className="absolute left-3 top-2 h-3 w-3 rounded-full bg-white"></div>
+              {/* Timeline Items */}
+              {[
+  {
+    year: "2022 – 2023",
+    title: "System Development Foundations",
+    desc: "Built academic systems for school activities, focusing on logic, database structure, and problem-solving rather than UI-heavy applications.",
+  },
+  {
+    year: "2024",
+    title: "Web Development Focus",
+    desc: "Started building modern websites using Laravel and React, improving UI/UX, responsiveness, and real-world usability.",
+  },
+  {
+    year: "2025",
+    title: "Mobile & Intelligent Apps",
+    desc: "Developed mobile applications with machine learning and sentiment analysis, combining software engineering with data-driven features.",
+  },
+  {
+    year: "Now",
+    title: "Growing as a Software Developer",
+    desc: "Sharpening skills in performance, clean architecture, and modern frontend experiences while building production-ready projects.",
+  },
+].map((item, index) => {
+  const delayClass = index === 0 ? "timeline-delay-200" : 
+                     index === 1 ? "timeline-delay-300" : 
+                     index === 2 ? "timeline-delay-400" : 
+                     "timeline-delay-500";
+  return (
+    <div
+      key={index}
+      ref={(el) => {
+        if (el) journeyRefs.current[index] = el;
+      }}
+      className={`relative flex gap-6 pl-12 pb-10 timeline-reveal ${delayClass}`}
+    >
+      <div className="absolute left-3 top-2 h-3 w-3 rounded-full bg-white"></div>
 
-        <div className="space-y-2">
-          <p className="text-sm text-white/50 font-medium">{item.year}</p>
-          <h4 className="text-xl font-semibold text-white">{item.title}</h4>
-          <p className="text-white/70 leading-relaxed max-w-2xl">
-            {item.desc}
-          </p>
-        </div>
+      <div className="space-y-2">
+        <p className="text-sm text-white/50 font-medium">{item.year}</p>
+        <h4 className="text-xl font-semibold text-white">{item.title}</h4>
+        <p className="text-white/70 leading-relaxed max-w-2xl">{item.desc}</p>
       </div>
-    ))}
-  </div>
-</section>
+    </div>
+  );
+})}
+
+
+            </div>
+          </section>
 
           {/* Tech Stack */}
-          <section id="tech" className="mb-16 space-y-6 py-10">
+          <section ref={techRef} id="tech" className="menu-reveal mb-16 space-y-6 py-10 delay-[300ms]">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-white/60">
               Tech Stack
             </p>
@@ -265,7 +460,7 @@ export default function Home() {
                 ].map((tech, index) => (
                   <div
                     key={`${tech.name}-1`}
-                    className="flex items-center justify-center flex-shrink-0"
+                    className="tech-glass-card flex items-center justify-center flex-shrink-0 p-4 sm:p-5 rounded-2xl"
                   >
                     <img
                       src={tech.src}
@@ -284,7 +479,7 @@ export default function Home() {
                 ].map((tech, index) => (
                   <div
                     key={`${tech.name}-2`}
-                    className="flex items-center justify-center flex-shrink-0"
+                    className="tech-glass-card flex items-center justify-center flex-shrink-0 p-4 sm:p-5 rounded-2xl"
                   >
                     <img
                       src={tech.src}
@@ -298,7 +493,7 @@ export default function Home() {
           </section>
 
           {/* Projects */}
-          <section id="projects" className="space-y-6">
+          <section ref={projectsRef} id="projects" className="menu-reveal space-y-6 delay-[400ms]">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-white/60">
               Projects
             </p>
@@ -322,11 +517,13 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="flex-1 flex items-center justify-center p-6 md:p-8">
-                  <img
-                    src="/Tacloban Event Organizer.jpg"
-                    alt="Tacloban Event Organizer"
-                    className="w-full h-auto rounded-lg object-cover shadow-lg"
-                  />
+                  <div className="project-glass-card w-full overflow-hidden rounded-2xl p-2">
+                    <img
+                      src="/Tacloban Event Organizer.jpg"
+                      alt="Tacloban Event Organizer"
+                      className="w-full h-auto rounded-xl object-cover shadow-lg"
+                    />
+                  </div>
                 </div>
               </a>
 
@@ -349,11 +546,13 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="flex-1 flex items-center justify-center p-6 md:p-8">
-                  <img
-                    src="/jepoysgrill.png"
-                    alt="Jepoy's Grill"
-                    className="w-full h-auto rounded-lg object-cover shadow-lg"
-                  />
+                  <div className="project-glass-card w-full overflow-hidden rounded-2xl p-2">
+                    <img
+                      src="/jepoysgrill.png"
+                      alt="Jepoy's Grill"
+                      className="w-full h-auto rounded-xl object-cover shadow-lg"
+                    />
+                  </div>
                 </div>
               </a>
 
@@ -387,22 +586,25 @@ export default function Home() {
           </section>
 
           {/* Contact Section */}
-          <section id="contact" className="mb-16 space-y-8 py-16 min-h-[60vh]">
+          <section ref={contactRef} id="contact" className="menu-reveal mb-16 space-y-8 py-16 min-h-[60vh] delay-[500ms]">
             <p className="text-base sm:text-lg font-semibold uppercase tracking-[0.25em] text-white/60">
               Contact
             </p>
             <h3 className="text-4xl sm:text-5xl font-bold text-white">
               Let's Work Together
             </h3>
-            <p className="max-w-3xl text-lg sm:text-xl leading-relaxed text-white/75 mb-12">
+            <p className="max-w-3xl text-lg sm:text-xl leading-relaxed text-white/75 mb-4">
               I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Feel free to reach out!
+            </p>
+            <p className="text-base text-white/50 mb-12">
+              Based in Tacloban City, Philippines
             </p>
             
             <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-5xl">
               {/* Email */}
               <a
                 href="mailto:mccoldplay123@gmail.com"
-                className="group flex items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                className="contact-card-vibrate group flex items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
               >
                 <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/10 group-hover:bg-white/20 transition-all duration-300 flex-shrink-0">
                   <svg className="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -420,7 +622,7 @@ export default function Home() {
                 href="https://github.com/GhostTab"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                className="contact-card-vibrate group flex items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
               >
                 <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/10 group-hover:bg-white/20 transition-all duration-300 flex-shrink-0">
                   <svg className="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -438,7 +640,7 @@ export default function Home() {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                className="contact-card-vibrate group flex items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
               >
                 <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/10 group-hover:bg-white/20 transition-all duration-300 flex-shrink-0">
                   <svg className="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="currentColor" viewBox="0 0 24 24">

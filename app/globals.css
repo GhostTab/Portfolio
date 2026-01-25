@@ -15,6 +15,26 @@
   --bg-gradient-green: linear-gradient(rgb(184, 192, 183) 0%, rgb(204, 214, 209) 100%);
   --inline-code-background-color: #e3e3e3;
   --code-background-color: #282c34;
+  
+}
+[class*="delay-"] {
+  transition-delay: var(--delay, 0ms);
+}
+
+.delay-\[100ms\] { 
+  transition-delay: 100ms !important; 
+}
+.delay-\[200ms\] { 
+  transition-delay: 200ms !important; 
+}
+.delay-\[300ms\] { 
+  transition-delay: 300ms !important; 
+}
+.delay-\[400ms\] { 
+  transition-delay: 400ms !important; 
+}
+.delay-\[500ms\] { 
+  transition-delay: 500ms !important; 
 }
 
 @theme inline {
@@ -89,5 +109,138 @@ html {
     transform: translateY(-10px);
     opacity: 1;
   }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Modern menu entrance animation */
+.menu-reveal {
+  opacity: 0;
+  transform: translateY(32px) scale(0.98);
+  filter: blur(6px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.menu-reveal-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+/* Base hidden state */
+.timeline-reveal {
+  opacity: 0;
+  transform: translateX(-50px) rotateY(5deg) scale(0.95);
+  filter: blur(4px);
+  transition: 
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.8s ease-out;
+}
+
+/* Active state when visible */
+.timeline-reveal-active {
+  opacity: 1;
+  transform: translateX(0) rotateY(0deg) scale(1);
+  filter: blur(0);
+}
+
+/* Stagger delay helpers */
+.timeline-delay-100 { transition-delay: 0.1s; }
+.timeline-delay-200 { transition-delay: 0.2s; }
+.timeline-delay-300 { transition-delay: 0.3s; }
+.timeline-delay-400 { transition-delay: 0.4s; }
+.timeline-delay-500 { transition-delay: 0.5s; }
+
+/* Tech stack: smooth edges + glass cards */
+.tech-stack-container {
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%);
+  border: 1px solid rgba(255,255,255,0.08);
+  mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+}
+
+.tech-glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Project images glass card */
+.project-glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Logo L: hover micro-animations (pulse + morph) */
+.logo-nav:hover:not(.logo-easter-egg),
+.logo-loading:hover {
+  animation: logo-pulse 1.2s ease-in-out infinite;
+}
+
+.logo-nav h2 {
+  transition: transform 0.3s ease;
+}
+
+.logo-nav:hover:not(.logo-easter-egg) h2 {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+.logo-menu:hover:not(.logo-easter-egg) {
+  transform: scale(1.05);
+}
+
+@keyframes logo-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.95; }
+}
+
+/* Easter egg: click logo → spin + scale burst */
+@keyframes logo-easter-egg-kf {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.35) rotate(90deg); }
+  50% { transform: scale(1.15) rotate(180deg); }
+  75% { transform: scale(1.25) rotate(270deg); }
+  100% { transform: scale(1) rotate(360deg); }
+}
+
+.logo-nav.logo-easter-egg,
+.logo-menu.logo-easter-egg {
+  animation: logo-easter-egg-kf 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Contact cards: vibrate on hover */
+@keyframes vibrate {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  10% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+  20% { transform: translate(1px, 1px) rotate(0.5deg); }
+  30% { transform: translate(-1px, 1px) rotate(-0.3deg); }
+  40% { transform: translate(1px, -1px) rotate(0.3deg); }
+  50% { transform: translate(-1px, 0) rotate(-0.5deg); }
+  60% { transform: translate(1px, 0) rotate(0.5deg); }
+  70% { transform: translate(0, -1px) rotate(-0.3deg); }
+  80% { transform: translate(0, 1px) rotate(0.3deg); }
+  90% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+}
+
+.contact-card-vibrate:hover {
+  animation: vibrate 0.4s ease-in-out;
 }
 
