@@ -700,7 +700,8 @@ useEffect(() => {
         }`}
         style={{ background: "linear-gradient(180deg, #080809 0%, #0c0c0c 100%)" }}
       >
-        <div className="mx-auto w-full max-w-9xl px-4 sm:px-6 md:px-8 lg:px-12">
+        <div className="hero-waves" aria-hidden="true" />
+        <div className="relative z-10 mx-auto w-full max-w-9xl px-4 sm:px-6 md:px-8 lg:px-12">
           <header className="flex flex-col items-center text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-extrabold leading-[0.9] text-white">
               Loren Lloyd Pingal

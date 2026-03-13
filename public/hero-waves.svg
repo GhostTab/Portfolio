@@ -1,0 +1,19 @@
+<svg width="1600" height="600" viewBox="0 0 1600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="waveStroke" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="white" stop-opacity="0.0" />
+      <stop offset="20%" stop-color="white" stop-opacity="0.35" />
+      <stop offset="80%" stop-color="white" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="white" stop-opacity="0.0" />
+    </linearGradient>
+  </defs>
+
+  <g stroke="url(#waveStroke)" stroke-width="1.4" fill="none">
+    <path d="M-200 260 C 100 160, 500 340, 800 260 C 1150 180, 1450 340, 1800 260" />
+    <path d="M-200 310 C 80 420, 520 220, 800 330 C 1120 440, 1500 260, 1800 330" />
+    <path d="M-200 360 C 120 260, 520 420, 800 360 C 1120 300, 1480 420, 1800 360" />
+    <path d="M-200 410 C 60 520, 520 300, 800 390 C 1130 480, 1520 320, 1800 410" />
+    <path d="M-200 460 C 120 360, 520 520, 800 440 C 1130 360, 1500 520, 1800 440" />
+  </g>
+</svg>
+
