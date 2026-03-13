@@ -1,12 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentRole, setCurrentRole] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [logoEasterEgg, setLogoEasterEgg] = useState(false);
+  const [activeProject, setActiveProject] = useState("tacloban");
   const menuContainerRef = useRef<HTMLDivElement>(null);
 
   const triggerLogoEasterEgg = () => {
@@ -26,6 +29,13 @@ export default function Home() {
     }, 4000);
 
     return () => clearInterval(interval);
+  }, []);
+
+  // Always reset scroll to hero when landing on this page (including coming back from project pages)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
   }, []);
 
   useEffect(() => {
@@ -217,13 +227,13 @@ useEffect(() => {
   
 
   return (
-    <div className="min-h-screen bg-[#0b0c10] text-white">
+    <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Loading Screen */}
       <div
-        className={`fixed inset-0 z-[100] flex items-center justify-center bg-[#0b0c10] transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
+        className={`fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0a0a] transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
           isLoading ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
-        style={{ background: "linear-gradient(180deg, #0b0c10 0%, #0f1118 100%)" }}
+        style={{ background: "linear-gradient(180deg, #080809 0%, #0c0c0c 100%)" }}
       >
         <div className="flex flex-col items-center gap-8">
           <div className="relative logo-loading group cursor-default">
@@ -260,39 +270,48 @@ useEffect(() => {
         <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
           <button
             onClick={toggleMenu}
-            className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-all duration-500 ease-in-out hover:bg-white/30 hover:scale-110"
+            className={`flex items-center justify-center rounded-full h-9 sm:h-10 bg-white/20 backdrop-blur-sm transition-all duration-300 ease-out hover:bg-white/30 hover:scale-105 ${
+              isMenuOpen ? "w-9 sm:w-10 px-2 sm:px-2.5 gap-0" : "w-auto pl-4 pr-2.5 sm:pl-5 sm:pr-3 gap-2"
+            }`}
             aria-label="Toggle menu"
           >
-              <div className="relative h-5 w-6">
-                <span
-                  className={`absolute left-0 h-0.5 w-6 rounded-full bg-white transition-all duration-500 ease-in-out ${
-                    isMenuOpen ? "top-2 rotate-45" : "top-0 rotate-0"
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 top-2 h-0.5 w-6 rounded-full bg-white transition-all duration-500 ease-in-out ${
-                    isMenuOpen ? "opacity-0" : "opacity-100"
-                  }`}
-                />
-                <span
-                  className={`absolute left-0 h-0.5 w-6 rounded-full bg-white transition-all duration-500 ease-in-out ${
-                    isMenuOpen ? "top-2 -rotate-45" : "top-4 rotate-0"
-                  }`}
-                />
-              </div>
-            </button>
+            <span
+              className={`text-xs font-medium text-white/70 whitespace-nowrap overflow-hidden transition-all duration-300 ease-out ${
+                isMenuOpen ? "max-w-0 opacity-0" : "max-w-[4.5rem] sm:max-w-[5rem] opacity-100"
+              }`}
+            >
+              Click here
+            </span>
+            <div className="relative w-6 h-5 flex-shrink-0 flex items-center justify-center">
+              <span
+                className={`absolute left-0 h-0.5 w-6 rounded-full bg-white transition-all duration-500 ease-in-out ${
+                  isMenuOpen ? "top-2 rotate-45" : "top-0 rotate-0"
+                }`}
+              />
+              <span
+                className={`absolute left-0 top-2 h-0.5 w-6 rounded-full bg-white transition-all duration-500 ease-in-out ${
+                  isMenuOpen ? "opacity-0" : "opacity-100"
+                }`}
+              />
+              <span
+                className={`absolute left-0 h-0.5 w-6 rounded-full bg-white transition-all duration-500 ease-in-out ${
+                  isMenuOpen ? "top-2 -rotate-45" : "top-4 rotate-0"
+                }`}
+              />
+            </div>
+          </button>
         </div>
       </nav>
 
       {/* Full Screen Menu */}
       <div
         ref={menuContainerRef}
-        className={`fixed inset-0 z-40 bg-[#0b0c10] text-white overflow-y-auto transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
+        className={`fixed inset-0 z-40 bg-[#0a0a0a] text-white overflow-y-auto transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
           isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >
         {/* Menu Top Bar - Sticky */}
-        <div className="hidden md:block sticky top-0 z-10 bg-[#0b0c10]/95 backdrop-blur-md border-b border-white/10">
+        <div className="hidden md:block sticky top-0 z-10 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-white/10">
           <div
             className={`mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-4 sm:py-6 transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
               isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
@@ -340,7 +359,7 @@ useEffect(() => {
           {/* About Section */}
           <section 
           ref={aboutRef}
-          id="about" className="menu-reveal mb-16 space-y-8 py-16 min-h-[60vh] delay-[100ms]">
+          id="about" className="menu-reveal mb-16 space-y-8 py-0 min-h-[60vh] delay-[100ms]">
             <p className="text-base sm:text-lg font-semibold uppercase tracking-[0.25em] text-white/60">
               About
             </p>
@@ -493,95 +512,106 @@ useEffect(() => {
           </section>
 
           {/* Projects */}
-          <section ref={projectsRef} id="projects" className="menu-reveal space-y-6 delay-[400ms]">
+          <section
+            ref={projectsRef}
+            id="projects"
+            className="menu-reveal delay-[400ms] min-h-screen flex flex-col w-screen relative left-1/2 right-1/2 -ml-[50vw] px-4 sm:px-8 lg:px-16"
+          >
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-white/60">
               Projects
             </p>
-            <div className="space-y-8">
-              {/* Tacloban Event Organizer - Image Left, Text Right */}
-              <a 
-                href="https://github.com/GhostTab/localeventorganizer.git" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="project-card group flex flex-col md:flex-row-reverse gap-6 rounded-2xl bg-transparent backdrop-blur-sm cursor-pointer transition-all duration-300 hover:scale-[1.07]"
-              >
-                <div className="flex-1 flex flex-col justify-center p-6 md:p-8 space-y-4">
-                  <h4 className="text-2xl font-semibold text-white">Tacloban Event Organizer</h4>
-                  <p className="text-base text-white/70 leading-relaxed">
-                    Events management platform for Tacloban, handling bookings, schedules, and vendor coordination. A comprehensive system for managing local events with seamless user experience.
-                  </p>
-                  <div className="flex flex-wrap gap-2 text-xs text-white/60">
-                    <span className="rounded-full bg-white/10 px-3 py-1">Laravel</span>
-                    <span className="rounded-full bg-white/10 px-3 py-1">Bootstrap</span>
-                    <span className="rounded-full bg-white/10 px-3 py-1">PHP</span>
-                  </div>
-                </div>
-                <div className="flex-1 flex items-center justify-center p-6 md:p-8">
-                  <div className="project-glass-card w-full overflow-hidden rounded-2xl p-2">
-                    <img
-                      src="/Tacloban Event Organizer.jpg"
-                      alt="Tacloban Event Organizer"
-                      className="w-full h-auto rounded-xl object-cover shadow-lg"
-                    />
-                  </div>
-                </div>
-              </a>
 
-              {/* Jepoy's Grill - Text Left, Image Right */}
-              <a 
-                href="https://act2-artoza-inalisan-lasagas-penalosa.netlify.app/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="project-card group flex flex-col md:flex-row gap-6 rounded-2xl bg-transparent backdrop-blur-sm cursor-pointer overflow-hidden transition-all duration-300 hover:scale-[1.07]"
-              >
-                <div className="flex-1 flex flex-col justify-center p-6 md:p-8 space-y-4">
-                  <h4 className="text-2xl font-semibold text-white">Jepoy's Grill</h4>
-                  <p className="text-base text-white/70 leading-relaxed">
-                    A modern restaurant website featuring an elegant design, menu display, and seamless user experience. Showcasing the restaurant's offerings with a clean and appetizing interface.
-                  </p>
-                  <div className="flex flex-wrap gap-2 text-xs text-white/60">
-                    <span className="rounded-full bg-white/10 px-3 py-1">HTML</span>
-                    <span className="rounded-full bg-white/10 px-3 py-1">CSS</span>
-                    <span className="rounded-full bg-white/10 px-3 py-1">JavaScript</span>
-                  </div>
-                </div>
-                <div className="flex-1 flex items-center justify-center p-6 md:p-8">
-                  <div className="project-glass-card w-full overflow-hidden rounded-2xl p-2">
-                    <img
-                      src="/jepoysgrill.png"
-                      alt="Jepoy's Grill"
-                      className="w-full h-auto rounded-xl object-cover shadow-lg"
-                    />
-                  </div>
-                </div>
-              </a>
+            <div className="mt-10 flex-1 grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] items-center">
+              {/* Project names (left) */}
+              <div className="flex flex-col gap-6 sm:gap-7 md:gap-8 items-start">
+                {[
+                  {
+                    id: "tacloban",
+                    name: "Tacloban Event Organizer",
+                    route: "/projects/tacloban",
+                  },
+                  {
+                    id: "jepoys",
+                    name: "Jepoy's Grill",
+                    route: "/projects/jepoys-grill",
+                  },
+                  {
+                    id: "moodify",
+                    name: "Moodify – Playlist Generator",
+                    route: "/projects/moodify",
+                  },
+                ].map((project) => {
+                  const isActive = activeProject === project.id;
+                  return (
+                    <button
+                      key={project.id}
+                      type="button"
+                      onMouseEnter={() => setActiveProject(project.id)}
+                      onFocus={() => setActiveProject(project.id)}
+                      onClick={() => router.push(project.route)}
+                      className="group flex flex-col items-start text-left outline-none"
+                    >
+                      <span
+                        className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight transition-colors duration-300 ${
+                          isActive
+                            ? "text-red-500"
+                            : "text-white/70 group-hover:text-red-400 group-focus:text-red-400"
+                        }`}
+                      >
+                        {project.name}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
 
-              {/* Moodify - Text Left, Image Right (Small Image) */}
-              <a 
-                href="https://github.com/GhostTab/MoodifySentiment.git" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="project-card group flex flex-col md:flex-row-reverse gap-6 rounded-2xl bg-transparent backdrop-blur-sm cursor-pointer overflow-hidden transition-all duration-300  hover:scale-[1.07]"
-              >
-                <div className="flex-1 flex flex-col justify-center p-6 md:p-8 space-y-4">
-                  <h4 className="text-2xl font-semibold text-white">Moodify – Playlist Generator</h4>
-                  <p className="text-base text-white/70 leading-relaxed">
-                    Personalized playlists based on mood with smart recommendations and a focused UI. A mobile application that integrates machine learning to create music playlists tailored to your emotional state.
-                  </p>
-                  <div className="flex flex-wrap gap-2 text-xs text-white/60">
-                    <span className="rounded-full bg-white/10 px-3 py-1">Python</span>
-                    <span className="rounded-full bg-white/10 px-3 py-1">Kotlin</span>
-                    <span className="rounded-full bg-white/10 px-3 py-1">Machine Learning</span>
-                  </div>
+              {/* Images (right) */}
+              <div className="relative min-h-[260px] sm:min-h-[360px] md:min-h-[420px]">
+                {/* Tacloban */}
+                <div
+                  className={`absolute inset-0 flex items-end justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    activeProject === "tacloban"
+                      ? "opacity-100 translate-x-0"
+                      : "pointer-events-none opacity-0 translate-x-4"
+                  }`}
+                >
+                  <img
+                    src="/Tacloban Event Organizer.jpg"
+                    alt="Tacloban Event Organizer"
+                    className="w-full h-full max-h-[480px] object-cover rounded-[1.75rem] shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
+                  />
                 </div>
-                <div className="flex items-center justify-center p-6 md:p-8">
+
+                {/* Jepoy's Grill */}
+                <div
+                  className={`absolute inset-0 flex items-end justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    activeProject === "jepoys"
+                      ? "opacity-100 translate-x-0"
+                      : "pointer-events-none opacity-0 translate-x-4"
+                  }`}
+                >
+                  <img
+                    src="/jepoysgrill.png"
+                    alt="Jepoy's Grill"
+                    className="w-full h-full max-h-[480px] object-cover rounded-[1.75rem] shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
+                  />
+                </div>
+
+                {/* Moodify */}
+                <div
+                  className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    activeProject === "moodify"
+                      ? "opacity-100 translate-x-0"
+                      : "pointer-events-none opacity-0 translate-x-4"
+                  }`}
+                >
                   <img
                     src="/moodify.png"
                     alt="Moodify Playlist Generator"
-                    className="w-25 h-auto max-w-xs rounded-lg object-cover shadow-lg"
+                    className="w-auto max-w-[260px] sm:max-w-[320px] object-contain rounded-[1.75rem] shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
                   />
                 </div>
-              </a>
+              </div>
             </div>
           </section>
 
@@ -668,7 +698,7 @@ useEffect(() => {
         className={`relative flex min-h-screen items-center justify-center pt-20 transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
           isMenuOpen ? "opacity-0 scale-95 blur-sm" : isLoading ? "opacity-0" : "opacity-100 scale-100 blur-0"
         }`}
-        style={{ background: "linear-gradient(180deg, #0b0c10 0%, #0f1118 100%)" }}
+        style={{ background: "linear-gradient(180deg, #080809 0%, #0c0c0c 100%)" }}
       >
         <div className="mx-auto w-full max-w-9xl px-4 sm:px-6 md:px-8 lg:px-12">
           <header className="flex flex-col items-center text-center">
