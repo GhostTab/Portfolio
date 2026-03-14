@@ -21,11 +21,11 @@ export default function JepoysGrillProjectPage() {
         </header>
 
         <div className="space-y-8">
-          <div className="overflow-hidden rounded-3xl shadow-[0_40px_120px_rgba(0,0,0,0.9)]">
+          <div className="overflow-hidden rounded-xl shadow-[0_40px_120px_rgba(0,0,0,0.9)]">
             <img
               src="/jepoysgrill.png"
               alt="Jepoy's Grill"
-              className="w-full h-full max-h-[520px] object-cover"
+              className="w-full h-auto object-contain"
             />
           </div>
 

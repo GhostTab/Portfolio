@@ -11,6 +11,7 @@ export default function Home() {
   const [logoEasterEgg, setLogoEasterEgg] = useState(false);
   const [activeProject, setActiveProject] = useState("tacloban");
   const menuContainerRef = useRef<HTMLDivElement>(null);
+  const restoringMenuRef = useRef(false);
 
   const triggerLogoEasterEgg = () => {
     setLogoEasterEgg(true);
@@ -18,8 +19,9 @@ export default function Home() {
   };
 
   const roles = [
-    "Fullstack Web Developer",
-    "Aspiring Software Engineer",
+    "Full Stack Developer",
+    "System Architecture & Solutions",
+    "Creative Developer",
     "Frontend Enthusiast",
   ];
 
@@ -31,12 +33,38 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Always reset scroll to hero when landing on this page (including coming back from project pages)
+  // Restore menu open + scroll to projects when returning from a project page (back button)
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window === "undefined") return;
+    if (sessionStorage.getItem("portfolio_return_to_menu") === "projects") {
+      restoringMenuRef.current = true;
+      sessionStorage.removeItem("portfolio_return_to_menu");
+      setIsMenuOpen(true);
+    }
+  }, []);
+
+  // Scroll to top only when not restoring menu (e.g. fresh load or direct nav to home)
+  useEffect(() => {
+    if (typeof window !== "undefined" && !restoringMenuRef.current) {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     }
   }, []);
+
+  // When menu opens from back-navigation, scroll menu to projects section
+  useEffect(() => {
+    if (!isMenuOpen || !restoringMenuRef.current) return;
+    const root = menuContainerRef.current;
+    if (!root) return;
+    const el = root.querySelector("#projects");
+    if (el) {
+      const raf = requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        restoringMenuRef.current = false;
+      });
+      return () => cancelAnimationFrame(raf);
+    }
+    restoringMenuRef.current = false;
+  }, [isMenuOpen]);
 
   useEffect(() => {
     // Loading screen animation
@@ -260,7 +288,7 @@ useEffect(() => {
           <button
             onClick={triggerLogoEasterEgg}
             aria-label="Logo"
-            className={`logo-nav group flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-300 hover:shadow-xl ${logoEasterEgg ? "logo-easter-egg" : ""}`}
+            className={`logo-nav group flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-300 hover:shadow-xl cursor-pointer ${logoEasterEgg ? "logo-easter-egg" : ""}`}
           >
             <h2 className="text-lg sm:text-xl font-bold whitespace-nowrap text-black transition-transform duration-300 group-hover:scale-110">
               L
@@ -270,7 +298,7 @@ useEffect(() => {
         <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
           <button
             onClick={toggleMenu}
-            className={`flex items-center justify-center rounded-full h-9 sm:h-10 bg-white/20 backdrop-blur-sm transition-all duration-300 ease-out hover:bg-white/30 hover:scale-105 ${
+            className={`flex items-center justify-center rounded-full h-9 sm:h-10 bg-white/20 backdrop-blur-sm transition-all duration-300 ease-out hover:bg-white/30 hover:scale-105 cursor-pointer ${
               isMenuOpen ? "w-9 sm:w-10 px-2 sm:px-2.5 gap-0" : "w-auto pl-4 pr-2.5 sm:pl-5 sm:pr-3 gap-2"
             }`}
             aria-label="Toggle menu"
@@ -310,8 +338,13 @@ useEffect(() => {
           isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >
-        {/* Menu Top Bar - Sticky */}
-        <div className="hidden md:block sticky top-0 z-10 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-white/10">
+        {/* Waves background (fixed so it doesn't scroll) */}
+        <div className="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
+          <div className="hero-waves" />
+        </div>
+
+        {/* Menu Top Bar - Sticky (z-20 so it stays above scrolling content and links stay clickable) */}
+        <div className="relative z-20 hidden md:block sticky top-0 bg-[#0a0a0a]/95 backdrop-blur-md">
           <div
             className={`mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 py-4 sm:py-6 transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
               isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
@@ -351,7 +384,7 @@ useEffect(() => {
 
         {/* Menu Content */}
         <div
-          className={`mx-auto flex max-w-6xl flex-col px-4 sm:px-6 py-6 sm:py-10 transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
+          className={`relative z-10 mx-auto flex max-w-6xl flex-col px-4 sm:px-6 py-6 sm:py-10 transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
             isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
           }`}
         >
@@ -379,12 +412,10 @@ useEffect(() => {
                   Based in Tacloban City, Philippines
                 </p>
                 <p className="text-lg sm:text-xl leading-relaxed text-white/75">
-                  I am a web developer with over two years of experience building modern web
-                  applications. I primarily work with Laravel and React, focusing on creating clean,
-                  functional, and user-friendly systems. I have developed organizer platforms and
-                  mobile applications that integrate machine learning and AI features. Currently, I am
-                  strengthening my skills in modern website development, with an emphasis on
-                  performance, design, and real-world usability.
+                  I design and build solutions that scale—as a <strong className="text-white/90">Full Stack Developer</strong> with a focus on <strong className="text-white/90">system architecture</strong>. I turn complex requirements into clear, maintainable systems using Laravel and React, from event platforms and mobile apps with ML features to modern web products. I care about performance, clean structure, and outcomes that work for users and the business.
+                </p>
+                <p className="text-base sm:text-lg text-white/60 italic">
+                  I&apos;m good at turning messy problems into clear, scalable solutions—from architecture to UI.
                 </p>
                 <a
                   href="/Loren Lloyd pingal.pdf"
@@ -431,8 +462,8 @@ useEffect(() => {
   },
   {
     year: "Now",
-    title: "Growing as a Software Developer",
-    desc: "Sharpening skills in performance, clean architecture, and modern frontend experiences while building production-ready projects.",
+    title: "Full Stack & System Architecture",
+    desc: "Focusing on end-to-end solutions, system design, and production-ready applications—performance, scalability, and maintainability first.",
   },
 ].map((item, index) => {
   const delayClass = index === 0 ? "timeline-delay-200" : 
@@ -462,49 +493,37 @@ useEffect(() => {
             </div>
           </section>
 
-          {/* Tech Stack */}
-          <section ref={techRef} id="tech" className="menu-reveal mb-16 space-y-6 py-10 delay-[300ms]">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-white/60">
+          {/* Tech Stack — minimal, liquid, futuristic */}
+          <section ref={techRef} id="tech" className="menu-reveal mb-16 py-10 delay-[300ms]">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-white/50 mb-8">
               Tech Stack
             </p>
-            <div className="relative overflow-hidden py-8">
-              <div className="tech-slide-track flex items-center gap-12 w-max">
+            <div className="tech-liquid-wrap relative">
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
                 {[
                   { name: "Next.js", src: "/next_js_logo_icon_145038.png" },
                   { name: "React", src: "/React-icon.svg.png" },
-                  { name: "Laravel", src: "/Laravel.svg.png" },
-                  { name: "Python", src: "/Python-logo-notext.svg.png" },
-                  { name: "PHP", src: "/PHP-logo.svg.png" },
                   { name: "JavaScript", src: "/javascript-logo-javascript-icon-transparent-free-png.webp" },
+                  { name: "Laravel", src: "/Laravel.svg.png" },
+                  { name: "PHP", src: "/PHP-logo.svg.png" },
+                  { name: "Python", src: "/Python-logo-notext.svg.png" },
                 ].map((tech, index) => (
                   <div
-                    key={`${tech.name}-1`}
-                    className="tech-glass-card flex items-center justify-center flex-shrink-0 p-4 sm:p-5 rounded-2xl"
+                    key={tech.name}
+                    className="tech-liquid-pill group"
+                    style={{ animationDelay: `${index * 0.15}s` }}
                   >
-                    <img
-                      src={tech.src}
-                      alt={tech.name}
-                      className="h-12 sm:h-16 w-auto opacity-70 transition-all duration-300 hover:opacity-100 hover:scale-110"
-                    />
-                  </div>
-                ))}
-                {[
-                  { name: "Next.js", src: "/next_js_logo_icon_145038.png" },
-                  { name: "React", src: "/React-icon.svg.png" },
-                  { name: "Laravel", src: "/Laravel.svg.png" },
-                  { name: "Python", src: "/Python-logo-notext.svg.png" },
-                  { name: "PHP", src: "/PHP-logo.svg.png" },
-                  { name: "JavaScript", src: "/javascript-logo-javascript-icon-transparent-free-png.webp" },
-                ].map((tech, index) => (
-                  <div
-                    key={`${tech.name}-2`}
-                    className="tech-glass-card flex items-center justify-center flex-shrink-0 p-4 sm:p-5 rounded-2xl"
-                  >
-                    <img
-                      src={tech.src}
-                      alt={tech.name}
-                      className="h-12 sm:h-16 w-auto opacity-70 transition-all duration-300 hover:opacity-100 hover:scale-110"
-                    />
+                    <div className="tech-liquid-glow" aria-hidden="true" />
+                    <div className="flex items-center gap-2.5 px-4 py-2.5 sm:px-5 sm:py-3 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-sm">
+                      <img
+                        src={tech.src}
+                        alt={tech.name}
+                        className="h-6 sm:h-7 w-auto opacity-70 group-hover:opacity-100 transition-all duration-500"
+                      />
+                      <span className="text-xs sm:text-sm font-medium text-white/70 group-hover:text-white/90 transition-colors duration-500">
+                        {tech.name}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -531,14 +550,19 @@ useEffect(() => {
                     route: "/projects/tacloban",
                   },
                   {
-                    id: "jepoys",
-                    name: "Jepoy's Grill",
-                    route: "/projects/jepoys-grill",
+                    id: "platinum-crypto",
+                    name: "Platinum Crypto",
+                    route: "/projects/platinum-crypto",
                   },
                   {
                     id: "moodify",
-                    name: "Moodify – Playlist Generator",
+                    name: "Moodify",
                     route: "/projects/moodify",
+                  },
+                  {
+                    id: "jepoys",
+                    name: "Jepoy's Grill",
+                    route: "/projects/jepoys-grill",
                   },
                 ].map((project) => {
                   const isActive = activeProject === project.id;
@@ -548,11 +572,14 @@ useEffect(() => {
                       type="button"
                       onMouseEnter={() => setActiveProject(project.id)}
                       onFocus={() => setActiveProject(project.id)}
-                      onClick={() => router.push(project.route)}
-                      className="group flex flex-col items-start text-left outline-none"
+                      onClick={() => {
+                        sessionStorage.setItem("portfolio_return_to_menu", "projects");
+                        router.push(project.route);
+                      }}
+                      className="group flex flex-col items-start text-left outline-none cursor-pointer"
                     >
                       <span
-                        className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight transition-colors duration-300 ${
+                        className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight transition-colors duration-300 uppercase ${
                           isActive
                             ? "text-red-500"
                             : "text-white/70 group-hover:text-red-400 group-focus:text-red-400"
@@ -569,7 +596,7 @@ useEffect(() => {
               <div className="relative min-h-[260px] sm:min-h-[360px] md:min-h-[420px]">
                 {/* Tacloban */}
                 <div
-                  className={`absolute inset-0 flex items-end justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                     activeProject === "tacloban"
                       ? "opacity-100 translate-x-0"
                       : "pointer-events-none opacity-0 translate-x-4"
@@ -578,13 +605,13 @@ useEffect(() => {
                   <img
                     src="/Tacloban Event Organizer.jpg"
                     alt="Tacloban Event Organizer"
-                    className="w-full h-full max-h-[480px] object-cover rounded-[1.75rem] shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
+                    className="w-full max-h-[480px] object-contain rounded-xl shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
                   />
                 </div>
 
                 {/* Jepoy's Grill */}
                 <div
-                  className={`absolute inset-0 flex items-end justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                     activeProject === "jepoys"
                       ? "opacity-100 translate-x-0"
                       : "pointer-events-none opacity-0 translate-x-4"
@@ -593,7 +620,7 @@ useEffect(() => {
                   <img
                     src="/jepoysgrill.png"
                     alt="Jepoy's Grill"
-                    className="w-full h-full max-h-[480px] object-cover rounded-[1.75rem] shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
+                    className="w-full max-h-[480px] object-contain rounded-xl shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
                   />
                 </div>
 
@@ -611,81 +638,92 @@ useEffect(() => {
                     className="w-auto max-w-[260px] sm:max-w-[320px] object-contain rounded-[1.75rem] shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
                   />
                 </div>
+
+                {/* Platinum Crypto */}
+                <div
+                  className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    activeProject === "platinum-crypto"
+                      ? "opacity-100 translate-x-0"
+                      : "pointer-events-none opacity-0 translate-x-4"
+                  }`}
+                >
+                  <img
+                    src="/Platinum_crypto.png"
+                    alt="Platinum Crypto"
+                    className="w-full max-h-[480px] object-contain rounded-xl shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
+                  />
+                </div>
               </div>
             </div>
           </section>
 
-          {/* Contact Section */}
-          <section ref={contactRef} id="contact" className="menu-reveal mb-16 space-y-8 py-16 min-h-[60vh] delay-[500ms]">
-            <p className="text-base sm:text-lg font-semibold uppercase tracking-[0.25em] text-white/60">
+          {/* Contact Section — centered, platforms aligned to contact info */}
+          <section ref={contactRef} id="contact" className="menu-reveal contact-section relative flex flex-col items-center justify-center text-center mb-16 py-16 min-h-[70vh] delay-[500ms]">
+            <p className="text-base sm:text-lg font-semibold uppercase tracking-[0.25em] text-white/60 mb-6">
               Contact
             </p>
-            <h3 className="text-4xl sm:text-5xl font-bold text-white">
-              Let's Work Together
+
+            <h3 className="contact-headline text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-red-500 uppercase mb-6">
+              CONTACT ME
             </h3>
-            <p className="max-w-3xl text-lg sm:text-xl leading-relaxed text-white/75 mb-4">
-              I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Feel free to reach out!
+
+            <p className="max-w-2xl text-lg sm:text-xl leading-relaxed text-white/75 mb-2">
+              I&apos;m always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Feel free to reach out!
             </p>
-            <p className="text-base text-white/50 mb-12">
+            <p className="text-base text-white/50 mb-10">
               Based in Tacloban City, Philippines
             </p>
-            
-            <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-5xl">
-              {/* Email */}
+
+            {/* Platforms and contact info aligned, centered */}
+            <div className="contact-links-row flex flex-wrap items-stretch justify-center gap-10 sm:gap-16">
               <a
                 href="mailto:mccoldplay123@gmail.com"
-                className="contact-card-vibrate group flex items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                className="contact-link-pill flex flex-col items-center gap-1.5 min-w-[140px] sm:min-w-[180px] cursor-pointer group"
               >
-                <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/10 group-hover:bg-white/20 transition-all duration-300 flex-shrink-0">
-                  <svg className="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-white/60 uppercase tracking-wide">Email</p>
-                  <p className="text-sm sm:text-base md:text-lg font-medium text-white group-hover:text-white transition-colors truncate">mccoldplay123@gmail.com</p>
-                </div>
+                <span className="text-sm font-normal uppercase tracking-widest text-white/80 group-hover:text-white transition-colors duration-300">
+                  Mail
+                </span>
+                <span className="text-sm font-normal text-white/50 group-hover:text-white/70 transition-colors duration-300">
+                  mccoldplay123@gmail.com
+                </span>
               </a>
-
-              {/* GitHub */}
               <a
                 href="https://github.com/GhostTab"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="contact-card-vibrate group flex items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                className="contact-link-pill flex flex-col items-center gap-1.5 min-w-[140px] sm:min-w-[180px] cursor-pointer group"
               >
-                <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/10 group-hover:bg-white/20 transition-all duration-300 flex-shrink-0">
-                  <svg className="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.532 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482C19.138 20.197 22 16.425 22 12.017 22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-white/60 uppercase tracking-wide">GitHub</p>
-                  <p className="text-sm sm:text-base md:text-lg font-medium text-white group-hover:text-white transition-colors">@GhostTab</p>
-                </div>
+                <span className="text-sm font-normal uppercase tracking-widest text-white/80 group-hover:text-white transition-colors duration-300">
+                  GitHub
+                </span>
+                <span className="text-sm font-normal text-white/50 group-hover:text-white/70 transition-colors duration-300">
+                  @GhostTab
+                </span>
               </a>
-
-              {/* Facebook */}
               <a
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="contact-card-vibrate group flex items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                className="contact-link-pill flex flex-col items-center gap-1.5 min-w-[140px] sm:min-w-[180px] cursor-pointer group"
               >
-                <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/10 group-hover:bg-white/20 transition-all duration-300 flex-shrink-0">
-                  <svg className="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                  </svg>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-white/60 uppercase tracking-wide">Facebook</p>
-                  <p className="text-sm sm:text-base md:text-lg font-medium text-white group-hover:text-white transition-colors truncate">Loren Lloyd Pingal</p>
-                </div>
+                <span className="text-sm font-normal uppercase tracking-widest text-white/80 group-hover:text-white transition-colors duration-300">
+                  Facebook
+                </span>
+                <span className="text-sm font-normal text-white/50 group-hover:text-white/70 transition-colors duration-300">
+                  Loren Lloyd Pingal
+                </span>
               </a>
             </div>
 
-            <div className="mt-12 pt-12 border-t border-white/10">
-              <p className="text-center text-white/60 text-sm">
+            {/* Cute animated icon (bottom-right, peace sign position) */}
+            <div className="contact-cute-icon absolute bottom-4 right-4 sm:bottom-8 sm:right-8 w-14 h-14 sm:w-16 sm:h-16 pointer-events-none" aria-hidden="true">
+              <svg viewBox="0 0 24 24" className="w-full h-full contact-cute-icon-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6L12 2z" fill="#fbbf24" stroke="#f59e0b" strokeWidth="1" strokeLinejoin="round"/>
+              </svg>
+            </div>
+
+            <div className="mt-12 pt-12 border-t border-white/10 w-full max-w-xl">
+              <p className="text-white/60 text-sm">
                 © {new Date().getFullYear()} Loren Lloyd Pingal. All rights reserved.
               </p>
             </div>

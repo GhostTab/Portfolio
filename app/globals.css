@@ -180,6 +180,72 @@ html {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
 }
 
+/* Tech stack — minimal, liquid, futuristic */
+.tech-liquid-wrap {
+  --liquid-cyan: rgba(34, 211, 238, 0.15);
+  --liquid-violet: rgba(139, 92, 246, 0.12);
+}
+
+.tech-liquid-pill {
+  position: relative;
+  animation: tech-liquid-float 6s ease-in-out infinite;
+}
+
+.tech-liquid-pill:nth-child(odd) {
+  animation-delay: 0s;
+}
+
+.tech-liquid-pill:nth-child(even) {
+  animation-delay: 0.5s;
+}
+
+.tech-liquid-glow {
+  position: absolute;
+  inset: -1px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--liquid-cyan), var(--liquid-violet));
+  filter: blur(12px);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.tech-liquid-pill:hover .tech-liquid-glow {
+  opacity: 0.6;
+  animation: tech-liquid-pulse 2s ease-in-out infinite;
+}
+
+.tech-liquid-pill > div:last-child {
+  position: relative;
+  z-index: 1;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.tech-liquid-pill:hover > div:last-child {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 24px rgba(34, 211, 238, 0.08);
+}
+
+@keyframes tech-liquid-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes tech-liquid-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.02);
+  }
+}
+
 /* Project images glass card */
 .project-glass-card {
   background: rgba(255, 255, 255, 0.05);
@@ -242,6 +308,64 @@ html {
 
 .contact-card-vibrate:hover {
   animation: vibrate 0.4s ease-in-out;
+}
+
+/* Contact section — MEET ME style, playful animations (run when section is revealed) */
+.contact-section.menu-reveal-active .contact-headline {
+  animation: contact-headline-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.contact-section .contact-headline {
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
+}
+
+.contact-section.menu-reveal-active .contact-link-pill {
+  animation: contact-link-in 0.5s ease forwards;
+}
+
+.contact-section .contact-link-pill {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.contact-section.menu-reveal-active .contact-link-pill:nth-child(1) { animation-delay: 0.2s; }
+.contact-section.menu-reveal-active .contact-link-pill:nth-child(2) { animation-delay: 0.35s; }
+.contact-section.menu-reveal-active .contact-link-pill:nth-child(3) { animation-delay: 0.5s; }
+
+@keyframes contact-headline-in {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes contact-link-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Cute contact icon (star) — gentle bounce + sparkle */
+.contact-cute-icon-svg {
+  animation: contact-cute-bounce 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.4));
+}
+
+@keyframes contact-cute-bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-6px) scale(1.08) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(0) scale(1) rotate(5deg);
+  }
+  75% {
+    transform: translateY(-4px) scale(1.05) rotate(-2deg);
+  }
 }
 
 /* Hero background waves */

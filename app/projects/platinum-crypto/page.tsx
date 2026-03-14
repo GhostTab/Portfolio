@@ -1,6 +1,6 @@
 "use client";
 
-export default function TaclobanProjectPage() {
+export default function PlatinumCryptoProjectPage() {
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
       <section
@@ -12,19 +12,18 @@ export default function TaclobanProjectPage() {
             Project
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
-            Tacloban Event Organizer
+            Platinum Crypto
           </h1>
           <p className="max-w-2xl text-sm sm:text-base text-white/65">
-            A city-wide events management platform for bookings, schedules, and vendor coordination
-            designed for local organizers in Tacloban City.
+            A cryptocurrency tracking platform with real-time data, watchlists, and price alerts—focused on the coins you care about without the clutter.
           </p>
         </header>
 
         <div className="space-y-8">
           <div className="overflow-hidden rounded-xl shadow-[0_40px_120px_rgba(0,0,0,0.9)]">
             <img
-              src="/Tacloban Event Organizer.jpg"
-              alt="Tacloban Event Organizer"
+              src="/Platinum_crypto.png"
+              alt="Platinum Crypto"
               className="w-full h-auto object-contain"
             />
           </div>
@@ -32,14 +31,10 @@ export default function TaclobanProjectPage() {
           <div className="grid gap-8 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
             <div className="space-y-4 text-sm sm:text-base text-white/75 leading-relaxed">
               <p>
-                This platform centralizes event creation, scheduling, and management for local
-                organizers. It supports venue coordination, vendor management, and attendee
-                information with a focus on clarity and reliability instead of visual clutter.
+                Platinum offers a clean, modern interface for tracking crypto prices, saving favorites, and setting alerts. Real-time market data is presented in a simple table with coins, prices, 24h change, and market cap, with support for currency selection (e.g. PHP).
               </p>
               <p>
-                Built with Laravel and Bootstrap, the system emphasizes straightforward flows and
-                a responsive layout so both admins and guests can navigate quickly from desktop or
-                mobile.
+                The app emphasizes usability: search, watchlists, and alerts in one place so users can stay on top of the market without distraction. The design uses a soft gradient background and clear typography for a focused, professional experience.
               </p>
             </div>
             <div className="space-y-4 text-sm">
@@ -47,13 +42,13 @@ export default function TaclobanProjectPage() {
                 <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
                   Stack
                 </p>
-                <p className="text-white/80">Laravel · Bootstrap · PHP · MySQL</p>
+                <p className="text-white/80">React · Next.js · Real-time data · Modern UI</p>
               </div>
               <div>
                 <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
                   Role
                 </p>
-                <p className="text-white/80">Fullstack development · UI implementation</p>
+                <p className="text-white/80">Fullstack development · UI/UX</p>
               </div>
             </div>
           </div>
@@ -62,4 +57,3 @@ export default function TaclobanProjectPage() {
     </main>
   );
 }
-
