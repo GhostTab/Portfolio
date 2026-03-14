@@ -463,7 +463,7 @@ useEffect(() => {
   {
     year: "Now",
     title: "Full Stack & System Architecture",
-    desc: "Focusing on end-to-end solutions, system design, and production-ready applications—performance, scalability, and maintainability first.",
+    desc: "Focusing on end-to-end solutions, system design, creative UI, and production-ready applications—performance, scalability, and maintainability first.",
   },
 ].map((item, index) => {
   const delayClass = index === 0 ? "timeline-delay-200" : 
@@ -718,7 +718,7 @@ useEffect(() => {
             {/* Cute animated icon (bottom-right, peace sign position) */}
             <div className="contact-cute-icon absolute bottom-4 right-4 sm:bottom-8 sm:right-8 w-14 h-14 sm:w-16 sm:h-16 pointer-events-none" aria-hidden="true">
               <svg viewBox="0 0 24 24" className="w-full h-full contact-cute-icon-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6L12 2z" fill="#fbbf24" stroke="#f59e0b" strokeWidth="1" strokeLinejoin="round"/>
+                <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6L12 2z" fill="#ef4444" stroke="#dc2626" strokeWidth="1" strokeLinejoin="round"/>
               </svg>
             </div>
 

@@ -350,7 +350,7 @@ html {
 /* Cute contact icon (star) — gentle bounce + sparkle */
 .contact-cute-icon-svg {
   animation: contact-cute-bounce 2s ease-in-out infinite;
-  filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.4));
+  filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.4));
 }
 
 @keyframes contact-cute-bounce {
