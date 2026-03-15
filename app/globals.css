@@ -353,6 +353,11 @@ html {
   filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.4));
 }
 
+/* Project section: magnetic image transition + scale on hover */
+.project-image-magnet {
+  transform: translateX(-20px) scale(1.02);
+}
+
 @keyframes contact-cute-bounce {
   0%, 100% {
     transform: translateY(0) scale(1) rotate(0deg);

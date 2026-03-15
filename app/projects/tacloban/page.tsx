@@ -15,13 +15,13 @@ export default function TaclobanProjectPage() {
             Tacloban Event Organizer
           </h1>
           <p className="max-w-2xl text-sm sm:text-base text-white/65">
-            A city-wide events management platform for bookings, schedules, and vendor coordination
+            A concept project: a city-wide events management platform for bookings, schedules, and vendor coordination
             designed for local organizers in Tacloban City.
           </p>
         </header>
 
         <div className="space-y-8">
-          <div className="overflow-hidden rounded-xl shadow-[0_40px_120px_rgba(0,0,0,0.9)]">
+          <div className="overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,0.9)]">
             <img
               src="/Tacloban Event Organizer.jpg"
               alt="Tacloban Event Organizer"
@@ -32,7 +32,7 @@ export default function TaclobanProjectPage() {
           <div className="grid gap-8 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
             <div className="space-y-4 text-sm sm:text-base text-white/75 leading-relaxed">
               <p>
-                This platform centralizes event creation, scheduling, and management for local
+                This concept project centralizes event creation, scheduling, and management for local
                 organizers. It supports venue coordination, vendor management, and attendee
                 information with a focus on clarity and reliability instead of visual clutter.
               </p>

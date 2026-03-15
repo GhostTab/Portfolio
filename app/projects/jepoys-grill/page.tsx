@@ -15,7 +15,7 @@ export default function JepoysGrillProjectPage() {
             Jepoy&apos;s Grill
           </h1>
           <p className="max-w-2xl text-sm sm:text-base text-white/65">
-            A modern single-page website for a local restaurant, focused on appetizing visuals,
+            A concept project: a modern single-page website for a local restaurant, focused on appetizing visuals,
             clear menu presentation, and mobile-friendly browsing.
           </p>
         </header>
@@ -32,7 +32,7 @@ export default function JepoysGrillProjectPage() {
           <div className="grid gap-8 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
             <div className="space-y-4 text-sm sm:text-base text-white/75 leading-relaxed">
               <p>
-                The site highlights the restaurant&apos;s identity with bold imagery, simple layout,
+                This concept project highlights the restaurant&apos;s identity with bold imagery, simple layout,
                 and clear calls to action, making it easy for visitors to browse the menu and get a
                 feel for the brand.
               </p>

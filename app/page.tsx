@@ -10,6 +10,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [logoEasterEgg, setLogoEasterEgg] = useState(false);
   const [activeProject, setActiveProject] = useState("tacloban");
+  const [projectListHovered, setProjectListHovered] = useState(false);
   const menuContainerRef = useRef<HTMLDivElement>(null);
   const restoringMenuRef = useRef(false);
 
@@ -493,40 +494,36 @@ useEffect(() => {
             </div>
           </section>
 
-          {/* Tech Stack — minimal, liquid, futuristic */}
+          {/* Tech Stack — terminal / SKILLS style */}
           <section ref={techRef} id="tech" className="menu-reveal mb-16 py-10 delay-[300ms]">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-white/50 mb-8">
-              Tech Stack
-            </p>
-            <div className="tech-liquid-wrap relative">
-              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-                {[
-                  { name: "Next.js", src: "/next_js_logo_icon_145038.png" },
-                  { name: "React", src: "/React-icon.svg.png" },
-                  { name: "JavaScript", src: "/javascript-logo-javascript-icon-transparent-free-png.webp" },
-                  { name: "Laravel", src: "/Laravel.svg.png" },
-                  { name: "PHP", src: "/PHP-logo.svg.png" },
-                  { name: "Python", src: "/Python-logo-notext.svg.png" },
-                ].map((tech, index) => (
-                  <div
-                    key={tech.name}
-                    className="tech-liquid-pill group"
-                    style={{ animationDelay: `${index * 0.15}s` }}
-                  >
-                    <div className="tech-liquid-glow" aria-hidden="true" />
-                    <div className="flex items-center gap-2.5 px-4 py-2.5 sm:px-5 sm:py-3 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-sm">
-                      <img
-                        src={tech.src}
-                        alt={tech.name}
-                        className="h-6 sm:h-7 w-auto opacity-70 group-hover:opacity-100 transition-all duration-500"
-                      />
-                      <span className="text-xs sm:text-sm font-medium text-white/70 group-hover:text-white/90 transition-colors duration-500">
-                        {tech.name}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="font-mono text-left space-y-4 text-white/60">
+              <p className="text-sm sm:text-base font-bold uppercase tracking-wide">
+                (+) Skills
+              </p>
+              <p className="text-sm sm:text-base font-bold uppercase tracking-wide">
+                - Front-end development:{" "}
+                <span className="font-normal">
+                  Next.js ; React ; JavaScript ; TypeScript ; Tailwind CSS ; HTML/CSS ; Bootstrap
+                </span>
+              </p>
+              <p className="text-sm sm:text-base font-bold uppercase tracking-wide">
+                - Back-end development:{" "}
+                <span className="font-normal">
+                  Laravel ; PHP ; Python ; Node.js ; REST APIs
+                </span>
+              </p>
+              <p className="text-sm sm:text-base font-bold uppercase tracking-wide">
+                - Databases & tools:{" "}
+                <span className="font-normal">
+                  MySQL ; PostgreSQL ; Git ; Cursor ; Claude 
+                </span>
+              </p>
+              <p className="text-sm sm:text-base font-bold uppercase tracking-wide">
+                - Other:{" "}
+                <span className="font-normal">
+                  System architecture ; Creative UI ; Responsive design ; Machine learning basics
+                </span>
+              </p>
             </div>
           </section>
 
@@ -541,8 +538,12 @@ useEffect(() => {
             </p>
 
             <div className="mt-10 flex-1 grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] items-center">
-              {/* Project names (left) */}
-              <div className="flex flex-col gap-6 sm:gap-7 md:gap-8 items-start">
+              {/* Project names (left) — hover triggers magnet on image */}
+              <div
+                className="flex flex-col gap-6 sm:gap-7 md:gap-8 items-start"
+                onMouseEnter={() => setProjectListHovered(true)}
+                onMouseLeave={() => setProjectListHovered(false)}
+              >
                 {[
                   {
                     id: "tacloban",
@@ -592,66 +593,70 @@ useEffect(() => {
                 })}
               </div>
 
-              {/* Images (right) */}
-              <div className="relative min-h-[260px] sm:min-h-[360px] md:min-h-[420px]">
-                {/* Tacloban */}
+              {/* Images (right) — magnetic transition + scale-on-hover image swap (slow) */}
+              <div className="relative min-h-[260px] sm:min-h-[360px] md:min-h-[420px] overflow-visible">
                 <div
-                  className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    activeProject === "tacloban"
-                      ? "opacity-100 translate-x-0"
-                      : "pointer-events-none opacity-0 translate-x-4"
-                  }`}
+                  className={`absolute inset-0 flex items-center justify-center transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${projectListHovered ? "project-image-magnet" : ""}`}
                 >
-                  <img
-                    src="/Tacloban Event Organizer.jpg"
-                    alt="Tacloban Event Organizer"
-                    className="w-full max-h-[480px] object-contain rounded-xl shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
-                  />
-                </div>
+                  {/* Tacloban — no border radius */}
+                  <div
+                    className={`absolute inset-0 flex items-center justify-center transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] origin-center ${
+                      activeProject === "tacloban"
+                        ? "opacity-100 translate-x-0 " + (projectListHovered ? "scale-105" : "scale-100")
+                        : "pointer-events-none opacity-0 translate-x-4 scale-95"
+                    }`}
+                  >
+                    <img
+                      src="/Tacloban Event Organizer.jpg"
+                      alt="Tacloban Event Organizer"
+                      className="w-full max-h-[480px] object-contain shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
+                    />
+                  </div>
 
-                {/* Jepoy's Grill */}
-                <div
-                  className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    activeProject === "jepoys"
-                      ? "opacity-100 translate-x-0"
-                      : "pointer-events-none opacity-0 translate-x-4"
-                  }`}
-                >
-                  <img
-                    src="/jepoysgrill.png"
-                    alt="Jepoy's Grill"
-                    className="w-full max-h-[480px] object-contain rounded-xl shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
-                  />
-                </div>
+                  {/* Jepoy's Grill */}
+                  <div
+                    className={`absolute inset-0 flex items-center justify-center transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] origin-center ${
+                      activeProject === "jepoys"
+                        ? "opacity-100 translate-x-0 " + (projectListHovered ? "scale-105" : "scale-100")
+                        : "pointer-events-none opacity-0 translate-x-4 scale-95"
+                    }`}
+                  >
+                    <img
+                      src="/jepoysgrill.png"
+                      alt="Jepoy's Grill"
+                      className="w-full max-h-[480px] object-contain rounded-xl shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
+                    />
+                  </div>
 
-                {/* Moodify */}
-                <div
-                  className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    activeProject === "moodify"
-                      ? "opacity-100 translate-x-0"
-                      : "pointer-events-none opacity-0 translate-x-4"
-                  }`}
-                >
-                  <img
-                    src="/moodify.png"
-                    alt="Moodify Playlist Generator"
-                    className="w-auto max-w-[260px] sm:max-w-[320px] object-contain rounded-[1.75rem] shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
-                  />
-                </div>
+                  {/* Moodify */}
+                  <div
+                    className={`absolute inset-0 flex items-center justify-center transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] origin-center ${
+                      activeProject === "moodify"
+                        ? "opacity-100 translate-x-0 " + (projectListHovered ? "scale-105" : "scale-100")
+                        : "pointer-events-none opacity-0 translate-x-4 scale-95"
+                    }`}
+                  >
+                    <img
+                      src="/moodify.png"
+                      alt="Moodify Playlist Generator"
+                      className="w-auto max-w-[260px] sm:max-w-[320px] object-contain rounded-[1.75rem] shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
+                    />
+                  </div>
 
-                {/* Platinum Crypto */}
-                <div
-                  className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    activeProject === "platinum-crypto"
-                      ? "opacity-100 translate-x-0"
-                      : "pointer-events-none opacity-0 translate-x-4"
-                  }`}
-                >
-                  <img
-                    src="/Platinum_crypto.png"
-                    alt="Platinum Crypto"
-                    className="w-full max-h-[480px] object-contain rounded-xl shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
-                  />
+                  {/* Platinum Crypto */}
+                  <div
+                    className={`absolute inset-0 flex items-center justify-center transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] origin-center ${
+                      activeProject === "platinum-crypto"
+                        ? "opacity-100 translate-x-0 " + (projectListHovered ? "scale-105" : "scale-100")
+                        : "pointer-events-none opacity-0 translate-x-4 scale-95"
+                    }`}
+                  >
+                    <img
+                      src="/Platinum_crypto.png"
+                      alt="Platinum Crypto"
+                      className="w-full max-h-[480px] object-contain rounded-xl shadow-[0_40px_120px_rgba(0,0,0,0.9)]"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
